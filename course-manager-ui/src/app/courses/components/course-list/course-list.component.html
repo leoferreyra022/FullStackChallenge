@@ -1,0 +1,84 @@
+<div class="card course-list">
+  <div class="table-caption">
+    <h5 class="m-0">Gestionar Cursos</h5>
+    <span class="filter-container">
+        <i class="icon fas fa-search"></i>
+        <input type="text" class="form-control" (input)="onFilterGlobal($event)" placeholder="Buscar global..." />
+    </span>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Título</th>
+          <th>Plataforma</th>
+          <th>Creado</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
+        <!-- TODO: Agregar fila para filtros por columna -->
+      </thead>
+      <tbody>
+        <tr *ngIf="(loading$ | async)">
+          <td [attr.colspan]="5" class="text-center loading-message">
+            Cargando datos de cursos...
+          </td>
+        </tr>
+
+        <ng-container *ngIf="!(loading$ | async)">
+            <tr *ngFor="let course of (courses$ | async)">
+              <td>{{ course.title }}</td>
+              <td>{{ course.platform }}</td>
+              <td>{{ course.createdAt | date:'short' }}</td>
+              <td>{{ course.state }}</td>
+              <td class="actions-cell">
+                <button type="button" class="btn btn-icon btn-success mr-2" (click)="edit(course)">
+                  <i class="icon fas fa-pencil-alt"></i>
+                </button>
+                <button type="button" class="btn btn-icon btn-warning" (click)="delete(course.id)">
+                  <i class="icon fas fa-trash-alt"></i>
+                </button>
+              </td>
+            </tr>
+        </ng-container>
+
+        <tr *ngIf="!(loading$ | async) && !(courses$ | async)?.length">
+           <td [attr.colspan]="5" class="text-center empty-message">
+                No se encontraron cursos.
+           </td>
+        </tr>
+      </tbody>
+      <!-- Paginador -->
+      <tfoot>
+        <tr *ngIf="(totalItems$ | async)! > 0">
+          <td [attr.colspan]="5">
+            <div class="pagination-controls">
+              <span>
+                Página {{ currentPage$ | async }} de {{ ((totalItems$ | async)! / itemsPerPage) | ceil }}
+                (Total: {{ totalItems$ | async }} cursos)
+              </span>
+              <div class="buttons">
+                <button class="btn btn-secondary" (click)="previousPage()"
+                        [disabled]="(currentPage$ | async) === 1">
+                  Anterior
+                </button>
+                <button class="btn btn-secondary" (click)="nextPage()"
+                        [disabled]="(currentPage$ | async)! * itemsPerPage >= (totalItems$ | async)!">
+                  Siguiente
+                </button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- Indicador de carga  -->
+<!--
+<div *ngIf="(loading$ | async)" class="loading-overlay">
+     Spinner CSS/HTML aquí
+</div>
+-->

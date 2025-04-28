@@ -1,0 +1,50 @@
+<div class="card course-form">
+  <h5>Añadir Nuevo Curso</h5>
+  <form [formGroup]="courseForm" (ngSubmit)="save()">
+    <div class="grid">
+
+      <div class="field col-12 md:col-6">
+        <label for="title">Título</label>
+        <input id="title" type="text" class="form-control" formControlName="title"
+               [ngClass]="{'is-invalid': f['title'].invalid && (f['title'].dirty || f['title'].touched)}"/>
+        <small class="error-message" *ngIf="f['title'].invalid && (f['title'].dirty || f['title'].touched)">
+            Título es requerido.
+        </small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="platform">Plataforma</label>
+        <input id="platform" type="text" class="form-control" formControlName="platform"
+              [ngClass]="{'is-invalid': f['platform'].invalid && (f['platform'].dirty || f['platform'].touched)}"/>
+        <small class="error-message" *ngIf="f['platform'].invalid && (f['platform'].dirty || f['platform'].touched)">
+          Plataforma es requerida.
+        </small>
+      </div>
+
+       <div class="field col-12 md:col-6">
+          <label for="state">Estado</label>
+          
+          <select id="state" class="form-control" formControlName="state"
+                  [ngClass]="{'is-invalid': f['state'].invalid && (f['state'].dirty || f['state'].touched)}">
+            <option [ngValue]="null" disabled>Selecciona un estado</option>
+            <option *ngFor="let state of courseStates" [ngValue]="state">{{ state }}</option>
+          </select>
+           <small class="error-message" *ngIf="f['state'].invalid && (f['state'].dirty || f['state'].touched)">
+              Estado es requerido.
+           </small>
+       </div>
+
+    </div>
+
+    <div class="mt-4 form-actions">
+        <button class="btn btn-primary" type="submit"
+                [disabled]="courseForm.invalid || (loading$ | async)!">
+          <i class="icon fas fa-save"></i> 
+          Guardar Curso
+          <span *ngIf="(loading$ | async)!"> (Guardando...)</span>
+        </button>
+        <!-- TODO: Agregar boton Cancelar/Reset -->
+    </div>
+
+  </form>
+</div>
